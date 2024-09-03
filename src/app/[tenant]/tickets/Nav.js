@@ -4,8 +4,9 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { urlPath } from "@/utils/url-helpers";
 
-export default function Nav() {
+export default function Nav( {tenant} ) {
     const pathname = usePathname();
     const activeProps = { className: "contrast" };
     const inactiveProps = { className: "secondary outline" };
@@ -18,7 +19,7 @@ export default function Nav() {
         } = supabase.auth.onAuthStateChange((event, session) => {
             console.log("onAuthStateChange", event);
             if (event === "SIGNED_OUT") {
-                router.push("/");
+                router.push(`/${tenant}`);
             }
         });
 
@@ -30,8 +31,8 @@ export default function Nav() {
     <nav>
       <ul>
         <li>
-            <Link role="button" href="/tickets"
-                {...(pathname === "/tickets" ? activeProps : inactiveProps)}>
+            <Link role="button" href={urlPath("/tickets", tenant)}
+                {...(pathname === urlPath("/tickets", tenant) ? activeProps : inactiveProps)}>
                 Ticket List
             </Link>
         </li>
